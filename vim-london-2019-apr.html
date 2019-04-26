@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vim Meetup</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Droid Serif';
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
+      .remark-slide-content {
+        font-size: 24px;
+      }
+      .remark-slide-number { display: none; }
+    </style>
+  </head>
+  <body onload="var slideshow = remark.create();">
+    <textarea id="source">
+class: center, middle
+
+# Increasing your vim productivity
+
+---
+
+layout: true
+
+## Hello
+
+Tomasz Walotek
+
+I work at **Lyst** as software engineer
+
+You can find me online on:
+
+---
+
+* twitter.com/uolot
+
+* github.com/uolot
+
+---
+
+* twitter.com/uolot (I don't really use it)
+
+* github.com/uolot (I'm not very active there)
+
+---
+
+layout: false
+class: center, middle
+
+# Code editors
+
+---
+
+## Code editors
+
+* Basic
+
+  Allow simple text manipulation
+
+* Advanced
+
+  Provide many features, have syntax highlighting, plugins, automation
+
+* IDEs
+
+  Include build tools, debuggers, deployment tools etc.
+
+---
+
+class: center, middle
+
+# IDE features
+
+---
+
+background-image: url(programmer-ide-vim.png)
+
+---
+
+layout: true
+
+## IDE features
+
+### "My IDE has feature X, how do I get it in Vim?"
+
+---
+
+---
+
+count: false
+
+* Project-wide identifier search
+* Decent auto-completion
+* Renaming things globally
+* Built-in terminal
+
+--
+
+count: false
+
+.center[
+### Vim has it!
+]
+
+---
+
+* Project-wide identifier search
+
+```vim
+:grep / :vimgrep
+```
+
+--
+
+count: false
+
+```vim
+:vim[grep][!] /{pattern}/[g][j] {file} ...
+:lv[imgrep][!] /{pattern}/[g][j] {file} ...
+:vimgrepa[dd][!] /{pattern}/[g][j] {file} ...
+:lvimgrepa[dd][!] /{pattern}/[g][j] {file} ...
+:gr[ep][!] [arguments]
+:lgr[ep][!] [arguments]
+:grepa[dd][!] [arguments]
+:lgrepa[dd][!] [arguments]
+```
+
+---
+
+* Decent auto-completion
+
+```vim
+<C-p> / <C-n>
+```
+
+--
+
+count: false
+
+```vim
+<C-x><C-f>  " files
+<C-x><C-k>  " dictionary
+<C-x><C-l>  " lines
+<C-x><C-o>  " omni completion
+<C-x><C-]>  " tags
+...and more...
+```
+
+---
+
+* Renaming things globally
+
+```vim
+:args / :argdo
+```
+
+--
+
+count: false
+
+```vim
+:args *.c
+:argadd *.h
+:argdo %s/foo/bar/ge
+:argdo update
+```
+
+---
+
+* Built-in terminal
+
+```vim
+:terminal
+```
+
+--
+
+count: false
+
+```vim
+V4j            " select text
+"ay            " yank to register a
+<C-w><C-j>     " go back to terminal
+<C-w>"a        " paste from register a
+```
+
+---
+
+layout: false
+background-image: url(backend-frontend.jpg)
+background-size: contain
+
+---
+
+## Unix as IDE
+
+A series of blog posts by Tom Ryder explaining how to get IDE-like features in Unix/Linux.
+
+* File and project management — ls, find, grep/ack, bash
+* Text editor and editing tools — vim, awk, sort, column
+* Compiler and/or interpreter — gcc, perl
+* Build tools — make
+* Debugger — gdb, valgrind, ltrace, lsof, pmap
+* Version control — diff, patch, svn, git
+
+.center[
+https://sanctum.geek.nz/arabesque/series/unix-as-ide/
+]
+
+---
+
+background-image: url(unix-as-an-ide.png)
+background-size: contain
+
+---
+
+class: center, middle
+
+# Project-wide identifier search
+
+---
+
+layout: true
+
+## Tags
+
+### Exuberant Ctags
+
+---
+
+Generates an index of names found in source files:
+
+* functions
+* variables
+* class members
+* macros
+* others
+
+--
+
+count: false
+
+#### `tags` file
+
+```
+{tagname}<Tab>{tagfile}<Tab>{tagaddress}
+```
+
+--
+
+count: false
+
+#### Unmaintained
+
+Use [Universal Ctags](https://github.com/universal-ctags/ctags) instead
+
+---
+
+layout: true
+
+## Tags
+
+---
+
+### Vim support
+
+#### Config
+
+```vim
+set tagrelative " use relative paths for tags
+set tags=./tags,tags " tags file paths
+```
+
+--
+
+### Vim support
+
+#### Generating
+
+```shell
+$ ctags -R .
+```
+
+---
+
+#### Usage
+
+```vim
+" jump to tag
+:tag foo / <C-]>
+
+" list matches, select tag and jump to it
+:ts[elect] bar / g]
+
+" same as :tselect, but jump directly if there's only one match
+:tj[ump] baz / g<C-]>
+```
+
+---
+
+#### Generating
+
+```shell
+$ ctags -R .
+```
+
+--
+
+count: false
+
+.center[
+You just need to run it after adding a new variable, function or class, easy!
+]
+
+--
+
+count: false
+
+.center[
+...or you can use Gutentags!
+]
+
+---
+
+layout: false
+background-image: url(oktoberfest.jpg)
+
+---
+
+## Tags
+
+### Gutentags
+
+Seamlessly generates `tags` file.
+
+https://github.com/ludovicchabant/vim-gutentags
+
+```vim
+Plug 'ludovicchabant/vim-gutentags'
+```
+
+---
+
+## Tags
+
+### vim -t
+
+```shell
+$ vim -t foobar
+```
+
+--
+
+count: false
+
+My custom bash function to fuzzy-find a tag and jump to it's definition
+
+```bash
+vt() {
+  local line
+  local tag
+  local file
+  line=$(
+    cat tags \
+    | grep -v '^!' \
+    | cut -d $'\t' -f 1-2 \
+    | column -t -s$'\t' \
+    | fzf --nth 1 --with-nth 1,2 --tiebreak=begin -q "$1"
+  )
+  tag=$(echo $line | cut -d' ' -f1)
+  file=$(echo $line | cut -d' ' -f2)
+  vim "$file" -c ":tag $tag"
+}
+```
+
+---
+
+background-image: url(productivity.jpg)
+
+---
+
+class: center, middle
+
+# Decent auto-completion
+
+---
+
+## Completion
+
+### Built-in
+
+Problems with built-in auto-completion:
+
+- confusing
+- doesn't support many languages
+- requires extra language plugins
+- not syntax-aware
+- needs config for every language
+
+--
+
+count: false
+
+```vim
+" example stolen from Stack Overflow
+filetype plugin on
+au FileType php setl ofu=phpcomplete#CompletePHP
+au FileType ruby,eruby setl ofu=rubycomplete#Complete
+au FileType html,xhtml setl ofu=htmlcomplete#CompleteTags
+au FileType c setl ofu=ccomplete#CompleteCpp
+au FileType css setl ofu=csscomplete#CompleteCSS
+```
+
+---
+
+## Completion
+
+### Alternatives
+
+* YouCompleteMe
+* Deoplete
+* NeoComplete
+* SuperTab
+--
+
+count: false
+* LSP - Language Server Protocol
+    * Developed by **Microsoft** for VS Code.
+    * Has implementations for most popular languages:
+      https://microsoft.github.io/language-server-protocol/implementors/servers/
+
+---
+
+## Completion
+
+### TabNine
+
+https://tabnine.com/
+
+```vim
+Plug 'zxqfl/tabnine-vim'
+```
+
+- supports language servers out of the box
+- built on top of YouCompleteMe
+- VS Code, Sublime Text, Atom, Emacs, Vim
+- uses machine learning®
+- doesn't send your code to the cloud©
+- it just works™
+
+--
+
+count: false
+
+
+ Cons:
+
+- requires a license - by default indexes only 400KB of files
+- and it's closed-source
+- ...and it looks dead
+
+---
+
+class: center, middle
+# Renaming things globally
+
+---
+
+## Searching (again)
+
+### grep
+
+--
+
+### Alternatives
+
+- ack
+- ag
+- pt
+- rg
+
+---
+
+layout: true
+## Fuzzines
+
+---
+
+### Fuzzy finders
+
+- ctrlp
+- selecta
+- pick
+- fzf
+- fzy
+
+---
+
+### FZF in Bash
+
+```bash
+# vim fuzzy find file with fd
+vf() {
+  vim ${@:2} $(fd -i -t f | fzf --multi -q "$1" --preview='less {}')
+}
+```
+
+```bash
+# fuzzy find process + kill
+fkill() {
+  pid=$(ps aux | fzf -q "$1" --multi --header-lines=1 | awk '{print $2}') \
+  && kill $pid
+}
+```
+
+---
+
+### FZF in Bash
+
+```bash
+# go to project fuzzy
+
+_subdirs() {
+  cd $1 ; fd -d 1 -t d -c never
+}
+
+gtf() {
+  proj=$(_subdirs ~/Dev | fzf -q "$1")
+  if [ "$?" == "0" ]; then
+    cd ~/Dev/$proj
+    activate
+  fi
+}
+```
+
+---
+
+### FZF in Git
+
+```gitconfig
+# gitconfig
+[alias]
+dff = ! git-dff
+apf = ! git-apf
+```
+
+```bash
+# git-dff
+query="$1"
+args="$2"
+selection=$(git-fzf $query)
+echo $selection
+git diff $args $selection
+```
+
+```bash
+# git-apf
+query="$1"
+args="$2"
+selection=$(git-fzf $query)
+echo $selection
+git add --patch $args $selection
+```
+
+---
+
+### FZF.vim
+
+https://github.com/junegunn/fzf.vim
+
+```vim
+Plug 'junegunn/fzf.vim'
+```
+
+* Files
+* Buffers
+* Ag / Rg
+* Lines
+* Tags
+--
+
+count: false
+* GFiles, GFiles?, Colors, BLines, BTags, Marks, Windows, Locate PATTERN, History, History:, History/, Snippets, Commits, BCommits, Commands, Maps, Helptags, Filetypes
+
+---
+
+layout: false
+
+## Ag + Fzf + Vim = Vim Agriculture
+
+_"Project search your feelings"_ by Jesse Leite
+
+https://jesseleite.com/posts/4/project-search-your-feelings
+
+```vim
+Plug 'jesseleite/vim-agriculture'
+```
+
+Adds `AgRaw` command to Vim.
+
+And mappings:
+
+```vim
+nmap <Leader>/ <Plug>AgRawSearch
+vmap <Leader>/ <Plug>AgRawVisualSelection
+nmap <Leader>* <Plug>AgRawWordUnderCursor
+```
+
+---
+
+## Ag + Fzf + Vim = Vim Agriculture
+
+The `:Ag` command from `fzf.vim` has some drawbacks:
+- doesn't allow to pass Ag options
+- escapes all quotes and treats them as a part of query
+
+With `vim-agriculture`:
+
+```vim
+:AgRaw func.*index
+:AgRaw 'func.*index'
+:AgRaw -Q 'function index()' app/Http/Controllers
+```
+
+---
+
+background-image: url(project-search-your-feelings.png)
+background-size: contain
+
+---
+
+## Renaming things globally (finally)
+
+To rename `foo` to `bar` the whole project:
+
+1. Search foo with AgRaw mapping
+    ```vim
+    <Leader>/foo<CR>
+    ```
+1. Narrow the scope by typing in the text field
+1. Select matches with `<Tab>` (or select all with `<Alt-a>`) and confirm with `<CR>`
+1. In the quickfix window run:
+    ```vim
+    :cdo s/\<foo\>/bar/g
+    ```
+
+---
+
+layout: false
+class: center, middle
+
+# Built-in terminal
+
+---
+
+layout: true
+
+# Slime
+
+---
+
+https://github.com/jpalardy/vim-slime
+
+```vim
+Plug 'jpalardy/vim-slime'
+
+let g:slime_target = "tmux"
+nmap <C-c><C-l> <Plug>SlimeLineSend
+```
+
+--
+
+count: false
+
+```vim
+let g:slime_python_ipython = 1
+function! Slime_ipython_toggle()
+    if !exists('g:slime_python_ipython') || g:slime_python_ipython == 0
+        let g:slime_python_ipython = 1
+    else
+        unlet g:slime_python_ipython
+    endif
+endfunction
+
+nmap <C-c><C-i> :silent! call Slime_ipython_toggle()<CR>
+```
+
+---
+
+### Before
+
+```vim
+V4j
+"ay
+<C-w><C-j>
+<C-w>"a
+```
+
+--
+
+count: false
+
+### After
+
+```vim
+V4j
+<C-c><C-c>
+```
+
+---
+
+class: center, middle
+layout: false
+
+# Thanks!
+
+### Questions?
+    </textarea>
+    <script src="./remark-latest.min.js" type="text/javascript"></script>
+  </body>
+</html>
